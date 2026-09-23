@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Model Architecture - Sanjiangyuan NDVI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 1200px;
+            overflow-x: auto;
+        }
+        .caption {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Hybrid Grey-DLinear Framework Architecture</h2>
+
+    <div class="container">
+        <div class="mermaid">
+graph LR
+    subgraph Data_Source [Input Layer]
+        MODIS[("MODIS NDVI<br/>(2000-2018)")]
+        Met[("Meteorological Data<br/>(Precip, Temp)")]
+    end
+
+    subgraph Prep [Preprocessing Layer]
+        SG[S-G Filtering<br/>(De-noising)]
+    end
+
+    subgraph Core_Model [Hybrid Modeling Layer]
+        direction TB
+        %% Trend Stream
+        Grey[("Dual Grey Model<br/>(Trend Extraction)")]
+        Trend_Out(Major Trend T)
+
+        %% Residual Stream
+        Diff((Sub))
+        Res_In(Residuals R)
+        Concat{Concat}
+        DLinear["DLinear Network<br/>(Covariate-Augmented)"]
+        Res_Pred(Predicted Fluctuation R')
+    end
+
+    subgraph Output [Output Layer]
+        Add((Add))
+        Final[Final NDVI Prediction]
+    end
+
+    %% Flows - Main Data Path
+    MODIS --> SG
+    SG --> Grey
+    SG --> Diff
+    Grey --> Trend_Out
+    Trend_Out --> Diff
+    
+    %% Residual Logic
+    Diff --> Res_In
+    Res_In --> Concat
+    Met --> Concat
+    Trend_Out -.->|"Trend as Prior"| Concat
+    Concat --> DLinear
+    DLinear --> Res_Pred
+
+    %% Fusion Logic
+    Trend_Out --> Add
+    Res_Pred --> Add
+    Add --> Final
+
+    %% Styling for Publication Quality
+    linkStyle default stroke:#333,stroke-width:2px;
+    
+    %% Colors
+    %% Blue for Input/Output
+    style MODIS fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style Met fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style Final fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    
+    %% Purple for Preprocessing
+    style SG fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    %% Green for Trend (Eco-Physics)
+    style Grey fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    style Trend_Out fill:#e8f5e9,stroke:#2e7d32,stroke-dasharray: 5 5
+    
+    %% Orange for Residual (Deep Learning)
+    style DLinear fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c
+    style Res_Pred fill:#fff3e0,stroke:#e65100,stroke-dasharray: 5 5
+    style Diff fill:#fff,stroke:#333
+    style Add fill:#fff,stroke:#333
+        </div>
+        <div class="caption">
+            <strong>Figure 1.</strong> The overall architecture of the proposed Grey-DLinear Hybrid Framework. The model decomposes the S-G filtered NDVI series into a long-term trend (modeled by Dual Grey Model) and short-term residuals (modeled by DLinear with meteorological covariates).
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+
+</body>
+</html>
