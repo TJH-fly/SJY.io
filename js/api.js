@@ -104,9 +104,16 @@
     function assetUrl(path) {
         const value = String(path || '');
         if (!value || /^https?:\/\//i.test(value)) return value;
-        // Uploaded media lives on the API host; bundled demo images ship with the page.
+        // Uploaded media lives on the API host; bundled images stay beside the page
+        // so a project Pages site under /SJY.io/ resolves them correctly.
         if (/^\/uploads\//.test(value)) return apiBase() + value;
-        return value;
+        const base = window.document && window.document.baseURI;
+        if (!base) return value;
+        try {
+            return new URL(value.replace(/^\/+/, ''), base).href;
+        } catch (_error) {
+            return value;
+        }
     }
 
     window.DemoAPI = Object.freeze({ get, request, apiBase, assetUrl, readToken, storeToken, clearToken });
