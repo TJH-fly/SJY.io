@@ -46,7 +46,7 @@
     }
 
     function operation(kind, state, message) {
-        const target = kind === 'user' ? 'users-status' : kind === 'image' ? 'image-status' : kind === 'audit' ? 'audit-status' : `${RESOURCES[kind].path}-status`;
+        const target = kind === 'user' ? 'users-status' : kind === 'image' ? 'image-status' : kind === 'confidence' ? 'detection-confidence-status' : kind === 'audit' ? 'audit-status' : `${RESOURCES[kind].path}-status`;
         const element = node(target);
         if (element) {
             element.dataset.state = state;
@@ -570,18 +570,18 @@
         const input = node('detection-confidence');
         const percent = Number(input?.value);
         if (!Number.isInteger(percent) || percent < 1 || percent > 100) {
-            operation('image', 'error', '识别置信度必须是 1–100 的整数。');
+            operation('confidence', 'error', '识别置信度必须是 1–100 的整数。');
             return;
         }
         writing = true;
         setControls();
-        operation('image', 'loading', '保存识别置信度中…');
+        operation('confidence', 'loading', '保存识别置信度中…');
         try {
             const data = await window.DemoAPI.request('PUT', `${API}/settings/detection-confidence`, { json: { confidencePercent: percent } });
             if (data && Number.isInteger(Number(data.confidencePercent)) && input) input.value = String(data.confidencePercent);
-            operation('image', 'success', `识别置信度已更新为 ${data?.confidencePercent ?? percent}%。`);
+            operation('confidence', 'success', `识别置信度已更新为 ${data?.confidencePercent ?? percent}%。`);
         } catch (error) {
-            operation('image', 'error', `识别置信度保存失败：${error?.message || '无法连接服务，请检查网络。'}`);
+            operation('confidence', 'error', `识别置信度保存失败：${error?.message || '无法连接服务，请检查网络。'}`);
         } finally {
             writing = false;
             setControls();
