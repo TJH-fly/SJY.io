@@ -34,7 +34,7 @@
         </div>
         <section class="login-card rounded-xl p-6" aria-labelledby="login-heading">
             <h2 id="login-heading" class="text-sm font-bold text-green-300 mb-1">后台登录</h2>
-            <p class="text-[11px] text-slate-400 mb-5">本系统仅供 127.0.0.1 本机演示。查看者只读，编辑者维护监测点与预警，管理员可管理账号并查看审计。</p>
+            <p class="text-[11px] text-slate-400 mb-5">使用服务器账号登录。查看者只读，编辑者维护监测点与预警，管理员可管理账号并查看审计。</p>
             <form id="login-form" class="space-y-4" novalidate>
                 <div class="login-field flex flex-col gap-1.5">
                     <label for="login-username" class="text-[11px] text-slate-400">用户名</label>
@@ -45,7 +45,7 @@
                     <input id="login-password" name="password" type="password" autocomplete="current-password" required placeholder="请输入密码">
                 </div>
                 <button id="login-submit" type="submit" class="login-button">登录</button>
-                <p id="login-status" role="status" aria-live="polite">请使用本机演示账号登录。</p>
+                <p id="login-status" role="status" aria-live="polite">请输入账号和密码登录。</p>
             </form>
         </section>
         <p class="text-center text-[10px] text-slate-500 mt-5">默认账号由部署者在首次启动时通过环境变量设置；请勿使用真实敏感凭据。</p>

@@ -104,7 +104,9 @@
     function assetUrl(path) {
         const value = String(path || '');
         if (!value || /^https?:\/\//i.test(value)) return value;
-        return apiBase() + '/' + value.replace(/^\/+/, '');
+        // Uploaded media lives on the API host; bundled demo images ship with the page.
+        if (/^\/uploads\//.test(value)) return apiBase() + value;
+        return value;
     }
 
     window.DemoAPI = Object.freeze({ get, request, apiBase, assetUrl, readToken, storeToken, clearToken });
