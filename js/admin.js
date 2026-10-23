@@ -61,6 +61,7 @@
         if (node('alert-submit')) node('alert-submit').disabled = busy || !canWrite;
         if (node('image-submit')) node('image-submit').disabled = busy || !canWrite;
         if (node('image-reset')) node('image-reset').disabled = busy;
+        if (node('detection-confidence-save')) node('detection-confidence-save').disabled = busy || !canWrite;
         if (node('user-submit')) node('user-submit').disabled = busy || role !== 'admin';
         for (const id of ['site-cancel', 'alert-cancel', 'user-cancel']) if (node(id)) node(id).disabled = busy;
         for (const button of actionButtons) button.disabled = busy || !canWrite;
@@ -380,6 +381,8 @@
             node('image-preview').src = window.DemoAPI.assetUrl(overview.detectionImageUrl);
             text('image-source', String(overview.detectionImageUrl).startsWith('/uploads/') ? `上传图片：${overview.detectionImageUrl}` : '默认图片');
         }
+        const confidence = Number(overview.detectionConfidencePercent);
+        if (Number.isInteger(confidence) && node('detection-confidence')) node('detection-confidence').value = String(confidence);
         const modules = node('admin-modules');
         const body = node('admin-table-body');
         if (modules) modules.replaceChildren();
@@ -562,6 +565,29 @@
         }
     }
 
+    async function saveDetectionConfidence() {
+        if (loading || writing || !canWrite) return;
+        const input = node('detection-confidence');
+        const percent = Number(input?.value);
+        if (!Number.isInteger(percent) || percent < 1 || percent > 100) {
+            operation('image', 'error', '识别置信度必须是 1–100 的整数。');
+            return;
+        }
+        writing = true;
+        setControls();
+        operation('image', 'loading', '保存识别置信度中…');
+        try {
+            const data = await window.DemoAPI.request('PUT', `${API}/settings/detection-confidence`, { json: { confidencePercent: percent } });
+            if (data && Number.isInteger(Number(data.confidencePercent)) && input) input.value = String(data.confidencePercent);
+            operation('image', 'success', `识别置信度已更新为 ${data?.confidencePercent ?? percent}%。`);
+        } catch (error) {
+            operation('image', 'error', `识别置信度保存失败：${error?.message || '无法连接服务，请检查网络。'}`);
+        } finally {
+            writing = false;
+            setControls();
+        }
+    }
+
     async function resetImage() {
         if (loading || writing || !canWrite) return;
         writing = true;
@@ -620,6 +646,7 @@
         }
         if (node('image-form')) node('image-form').addEventListener('submit', uploadImage);
         if (node('image-reset')) node('image-reset').addEventListener('click', resetImage);
+        if (node('detection-confidence-save')) node('detection-confidence-save').addEventListener('click', saveDetectionConfidence);
         if (node('user-form')) node('user-form').addEventListener('submit', event => { event.preventDefault(); return saveUser(); });
         if (node('user-cancel')) node('user-cancel').addEventListener('click', () => { if (!loading && !writing) { clearForm('user'); operation('user', 'idle', '已取消编辑。'); } });
         if (node('logout')) node('logout').addEventListener('click', logout);

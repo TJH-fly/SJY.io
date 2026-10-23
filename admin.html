@@ -286,6 +286,14 @@
                             <span id="image-status" class="operation-status" role="status" aria-live="polite">--</span>
                         </div>
                     </form>
+                    <div class="field mt-3">
+                        <label for="detection-confidence">识别置信度（%，1–100）</label>
+                        <div class="form-actions">
+                            <input id="detection-confidence" type="number" min="1" max="100" step="1" value="88">
+                            <button id="detection-confidence-save" type="button" class="manage-button">保存置信度</button>
+                            <span id="detection-confidence-status" class="operation-status" role="status" aria-live="polite">--</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
