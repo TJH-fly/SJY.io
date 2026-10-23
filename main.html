@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>三江源生态预警数字孪生平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="icons-sdk" async src="https://unpkg.com/lucide@latest"></script>
+    <script id="charts-sdk" async src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+        window._AMapSecurityConfig = { securityJsCode: 'c7d4cc03b9152ad13858e34adbd61f61' };
+    </script>
+    <script id="map-sdk" async src="https://webapi.amap.com/maps?v=2.0&key=c7d4cc03b9152ad13858e34adbd61f61"></script>
+    <script defer src="./js/config.js"></script>
+    <script defer src="./js/api.js"></script>
+    <script defer src="./js/dashboard.js"></script>
+    <style>
+        :root {
+            --bg-color: #010812;
+            --panel-bg: rgba(6, 18, 38, 0.85);
+            --theme-green: #29f5cf;
+            --warn-red: #ff4d4f;
+        }
+        body { background-color: var(--bg-color); color: #fff; overflow: hidden; font-family: "Microsoft YaHei", sans-serif; }
+        .tech-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(41, 245, 207, 0.2);
+            position: relative;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        .tech-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 10px; height: 10px;
+            border-top: 2px solid var(--theme-green); border-left: 2px solid var(--theme-green);
+        }
+        #map-container { position: absolute; inset: 0; }
+        .red-pulse {
+            width: 30px; height: 30px; background: var(--warn-red); border-radius: 50%;
+            box-shadow: 0 0 15px var(--warn-red); animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 77, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
+        }
+        .amap-info-content {
+            background: rgba(6, 18, 38, 0.95) !important;
+            border: 1px solid rgba(41, 245, 207, 0.4);
+            border-radius: 4px; padding: 0; color: #fff;
+            box-shadow: 0 0 20px rgba(41, 245, 207, 0.3);
+        }
+        .amap-info-sharp { border-top-color: rgba(6, 18, 38, 0.95) !important; }
+        .amap-info-close { color: #29f5cf !important; }
+        .degrade-card { padding: 10px 14px; font-size: 12px; line-height: 1.7; }
+        .degrade-card .title { color: #ff4d4f; font-weight: bold; font-size: 13px; margin-bottom: 2px; }
+        .degrade-card .coord { color: #29f5cf; font-family: Consolas, monospace; font-size: 11px; }
+        .degrade-card .desc { color: #cbd5e1; margin-top: 4px; font-size: 11px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(41, 245, 207, 0.3); border-radius: 10px; }
+        [hidden] { display: none !important; }
+        .api-strip { font-size: 10px; line-height: 1.5; color: #94a3b8; }
+        #api-status[data-state="error"] { color: #fca5a5; }
+        #api-status[data-state="success"] { color: #29f5cf; }
+        #api-retry { color: #29f5cf; border: 1px solid #29f5cf66; border-radius: 3px; padding: 1px 8px; }
+        .sdk-status { color: #94a3b8; font-size: 10px; }
+        @media (prefers-reduced-motion: reduce) { .red-pulse, .animate-pulse { animation: none; } }
+    </style>
+</head>
+<body class="h-screen flex flex-col p-4">
+    <header class="h-16 flex justify-between items-center px-6 z-20 shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 border-2 border-green-400 rounded-full flex items-center justify-center">
+                <i data-lucide="shield" class="text-green-400 w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tighter italic text-white">三江源生态预警数字孪生平台</h1>
+                <p class="text-[9px] text-green-400/60 font-mono tracking-widest uppercase">Sanjiangyuan Ecological Digital Twin & Early Warning</p>
+            </div>
+        </div>
+        <nav class="flex space-x-8 text-sm text-slate-400" aria-label="主导航">
+            <a href="./main.html" class="text-green-400 border-b-2 border-green-400 pb-1" aria-current="page">生态概览</a>
+            <a href="./vegetation.html" class="hover:text-green-300">植被信息</a>
+        </nav>
+        <div class="text-right font-mono"><div class="text-green-400 text-lg" id="clock">--</div></div>
+    </header>
+
+    <section class="api-strip flex flex-wrap items-center gap-x-3 px-6 z-20 shrink-0" aria-label="接口状态">
+        <span id="api-status" role="status" aria-live="polite">API 加载中…</span>
+        <button id="api-retry" type="button" hidden>重试</button>
+        <span id="demo-disclaimer">--</span>
+        <span>植被预测模型：NDVI-LSTM v2.3 · 演示，非真实推理</span>
+    </section>
+
+    <main class="flex-1 grid grid-cols-12 gap-6 relative mt-2 min-h-0">
+        <div id="map-container" class="rounded-xl" aria-label="三江源监测点地图"></div>
+        <div class="col-span-3 space-y-4 z-10">
+            <div class="tech-panel p-5 rounded-lg">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs text-slate-300">水源涵养总量 (降水补给)</span>
+                    <i data-lucide="target" class="w-4 h-4 text-green-400"></i>
+                </div>
+                <div class="flex items-baseline space-x-2 mb-4">
+                    <span id="metric-water" class="text-3xl font-bold">--</span>
+                    <span id="unit-water" class="text-xs text-blue-400 italic">--</span>
+                </div>
+                <div id="water-chart" class="w-full h-24" aria-label="水源涵养趋势"></div>
+                <p id="water-chart-status" class="sdk-status" role="status">图表加载中…</p>
+            </div>
+            <div class="tech-panel p-5 rounded-lg">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs text-slate-300">植被覆盖度 (NDVI) 指数</span>
+                    <i data-lucide="leaf" class="w-4 h-4 text-green-400"></i>
+                </div>
+                <div id="metric-ndvi" class="text-3xl font-bold">--</div>
+                <div class="text-[10px] text-green-400 mt-2 flex items-center">
+                    较多年前历史均值增长 <span id="metric-growth" class="ml-1">--</span><span id="unit-growth">--</span>
+                </div>
+            </div>
+            <div class="tech-panel p-5 rounded-lg">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs text-slate-300">空气质量 / 负氧离子</span>
+                    <i data-lucide="wind" class="w-4 h-4 text-orange-400"></i>
+                </div>
+                <div class="text-3xl font-bold"><span id="metric-oxygen">--</span> <span id="unit-oxygen" class="text-xs font-normal text-slate-500">--</span></div>
+            </div>
+        </div>
+
+        <div class="col-span-6 z-10 flex flex-col justify-between py-3 pointer-events-none min-h-0">
+            <p id="map-status" class="sdk-status self-center tech-panel rounded px-3 py-1" role="status">地图加载中…</p>
+            <details open class="tech-panel rounded-lg p-3 pointer-events-auto max-h-40 overflow-auto text-[10px] w-full">
+                <summary class="text-green-400 cursor-pointer">监测点信息（演示）</summary>
+                <ul id="monitoring-sites" class="space-y-1 mt-2 text-slate-300">--</ul>
+            </details>
+        </div>
+
+        <div class="col-span-3 space-y-4 z-10">
+            <div class="tech-panel p-5 rounded-lg flex flex-col h-[350px]">
+                <h3 class="text-sm font-bold text-red-400 flex items-center mb-4">
+                    <i data-lucide="alert-circle" class="w-4 h-4 mr-2"></i> 生态预警演示
+                </h3>
+                <div id="alerts-list" class="flex-1 overflow-y-auto space-y-4 pr-2">--</div>
+            </div>
+            <div class="tech-panel p-4 rounded-lg">
+                <h3 class="text-xs text-green-400 flex items-center mb-2">
+                    <i data-lucide="camera" class="w-4 h-4 mr-2"></i> 植被识别结果（演示标签）
+                </h3>
+                <div class="relative aspect-video rounded overflow-hidden border border-white/10 shadow-2xl">
+                    <img id="detection-image" alt="等待演示图片加载" class="w-full h-full object-cover" hidden>
+                    <div class="absolute inset-0 border-2 border-green-400/30 animate-pulse pointer-events-none"></div>
+                    <span id="detection-media-status" class="absolute top-2 left-2 text-[10px] text-slate-300">--</span>
+                    <div id="detection-status" class="absolute top-2 right-2 text-[9px] bg-black/60 px-1 py-0.5 text-green-400 font-mono rounded">--</div>
+                    <div class="absolute bottom-2 right-2 text-[10px] font-bold text-white bg-black/60 px-2 py-1">
+                        <span id="detection-label">--</span> · <span id="detection-confidence">--</span>
+                    </div>
+                </div>
+                <p id="detection-model" class="text-[9px] text-slate-400 mt-1">--</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="h-10 flex items-center justify-around text-[10px] text-slate-500 font-mono z-20 shrink-0">
+        <div class="flex items-center"><span class="w-2 h-2 bg-orange-500 rounded-full mr-2"></span> 卫星通讯状态: <span id="status-satellite">--</span></div>
+        <div class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> 预警传感器集群负载: <span id="status-load">--</span></div>
+        <div class="flex items-center"><span class="w-2 h-2 bg-blue-400 rounded-full mr-2"></span> 云服务器: <span id="status-cloud">--</span></div>
+        <div class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> 今日巡护里程: <span id="status-patrol">--</span></div>
+        <div class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> AI状态: <span id="status-ai">--</span></div>
+    </footer>
+</body>
+</html>

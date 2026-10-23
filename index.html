@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>三江源生态预警数字孪生平台</title>
+    <meta http-equiv="refresh" content="0; url=./main.html">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-
+    
     <script type="text/javascript">
         window._AMapSecurityConfig = { securityJsCode: 'c7d4cc03b9152ad13858e34adbd61f61' }
     </script>
@@ -40,7 +41,7 @@
         .amap-logo, .amap-copyright { display: none !important; }
 
         /* 地图滤镜：让高德地图更接近孪生模型感 */
-        #map-container {
+       #map-container {
             position: absolute; inset: 0;
             /* filter: brightness(0.8) contrast(1.2) saturate(0.8) hue-rotate(185deg); */
         }
@@ -55,22 +56,6 @@
             70% { box-shadow: 0 0 0 15px rgba(255, 77, 79, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
         }
-
-        /* 信息窗样式（和暗色主题协调） */
-        .amap-info-content {
-            background: rgba(6, 18, 38, 0.95) !important;
-            border: 1px solid rgba(41, 245, 207, 0.4);
-            border-radius: 4px;
-            padding: 0;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(41, 245, 207, 0.3);
-        }
-        .amap-info-sharp { border-top-color: rgba(6, 18, 38, 0.95) !important; }
-        .amap-info-close { color: #29f5cf !important; }
-        .degrade-card { padding: 10px 14px; font-size: 12px; line-height: 1.7; }
-        .degrade-card .title { color: #ff4d4f; font-weight: bold; font-size: 13px; margin-bottom: 2px; }
-        .degrade-card .coord { color: #29f5cf; font-family: Consolas, monospace; font-size: 11px; }
-        .degrade-card .desc { color: #cbd5e1; margin-top: 4px; font-size: 11px; }
 
         /* 滚动条美化 */
         ::-webkit-scrollbar { width: 4px; }
@@ -89,13 +74,10 @@
                 <p class="text-[9px] text-green-400/60 font-mono tracking-widest uppercase">Sanjiangyuan Ecological Digital Twin & Early Warning</p>
             </div>
         </div>
-
+        
         <nav class="flex space-x-8 text-sm text-slate-400">
-       <nav class="flex space-x-8 text-sm text-slate-400">
-           <a href="./index.html" class="text-green-400 border-b-2 border-green-400 pb-1">生态概览</a>
-           <a href="#" class="hover:text-green-300">植被检测</a>
-           <a href="./vegetation.html" class="hover:text-green-300">植被信息</a>
-       </nav>
+            <a href="#" class="text-green-400 border-b-2 border-green-400 pb-1">生态概览</a>
+            <a href="#" class="hover:text-green-300">植被信息</a>
         </nav>
 
         <div class="text-right font-mono">
@@ -149,17 +131,17 @@
                 <div class="flex-1 overflow-y-auto space-y-4 pr-2">
                     <div class="bg-red-500/10 border-l-2 border-red-500 p-3">
                         <div class="flex justify-between text-[10px] text-red-400 mb-1">
-                            <span class="font-bold">高寒草甸中度退化异常</span>
+                            <span class="font-bold">冰川消融数值异常</span>
                             <span>16:42</span>
                         </div>
-                        <p class="text-[10px] text-slate-300 leading-relaxed">玛多县玛查理镇，高寒草甸，中度至重度退化，重度区盖度约40%，大面积裸斑。</p>
+                        <p class="text-[10px] text-slate-300 leading-relaxed">监测到#Q44区域冰川消融量超历史均值3.2℃。</p>
                     </div>
                     <div class="bg-orange-500/10 border-l-2 border-orange-500 p-3">
                         <div class="flex justify-between text-[10px] text-orange-400 mb-1">
-                            <span class="font-bold">高寒草原中度退化异常</span>
+                            <span class="font-bold">非法人员闯入预警</span>
                             <span>15:10</span>
                         </div>
-                        <p class="text-[10px] text-slate-300 leading-relaxed">曲麻莱县曲麻河乡，高寒草原重度退化区盖度约30%，砾石及鼠洞较多。</p>
+                        <p class="text-[10px] text-slate-300 leading-relaxed">核心保护区无人机捕获：一辆非科考车辆行进，建议联动地面巡查。</p>
                     </div>
                 </div>
             </div>
@@ -169,7 +151,9 @@
                     <i data-lucide="camera" class="w-4 h-4 mr-2"></i> 实时物种识别监控
                 </h3>
                 <div class="relative aspect-video rounded overflow-hidden border border-white/10 shadow-2xl">
-                    <img src="./img/植物1.jpg" class="w-full h-full object-cover"/>
+					<img src="./img/植物1.jpg" class="w-full h-full object-cover"/>
+                   <!-- <img src="https://images.unsplash.com/photo-1615966650071-855b15f29ad1?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover"> -->
+					<!-- <video src="https://www.bilibili.com/video/BV1HMsVzQENd/?share_source=copy_web&vd_source=5e19bd750235e2ba213a7042321fb5d3" class="w-full h-full object-cover></video> -->
                     <div class="absolute inset-0 border-2 border-green-400/30 animate-pulse"></div>
                     <div class="absolute top-2 right-2 text-[9px] bg-black/60 px-1 py-0.5 text-green-400 font-mono rounded">AI ON</div>
                     <div class="absolute bottom-2 right-2 text-[10px] font-bold text-white bg-black/40 px-2 py-1 italic">98% SNOW LEOPARD</div>
@@ -189,63 +173,31 @@
     <script>
         lucide.createIcons();
 
-        // 1. 高德地图初始化（缩放级别调大以覆盖全部点位）
+        // 1. 高德地图初始化
         var map = new AMap.Map('map-container', {
             viewMode: '2D',
-            zoom: 7,
-            center: [97.5, 34.0],
-            pitch: 0,
-            rotation: 0,
-            mapStyle: 'amap://styles/green',
-            terrain: true
+            zoom: 10,
+            center: [97.5, 34.5],
+            pitch: 65,
+            rotation: -15,
+            mapStyle: 'amap://styles/green', // 基础样式，滤镜会进一步处理它
+            terrain: true 
         });
 
-        // 2. 三江源高原草甸退化点位（含名称、坐标、退化描述）
+        // 2. 在地图上添加 3D 红色预警呼吸点
         const points = [
-            { name: '玛多县玛查理镇',      pos: [97.84, 34.24], desc: '高寒草甸，中度至重度退化，重度区盖度约40%，大面积裸斑' },
-            { name: '玛多县花石峡镇',      pos: [98.85, 35.04], desc: '高寒草甸，重度退化区盖度约30%，砾石及鼠洞较多' },
-            { name: '甘德县上贡麻乡',      pos: [99.93, 33.93], desc: '高寒草甸，重度退化区盖度约40%，有零星鼠洞' },
-            // { name: '甘德县青珍乡',        pos: [100.18, 34.13], desc: '高山嵩草草甸退化演替研究区，海拔约4060m' },
-            // { name: '玛沁县大武镇',        pos: [100.49, 34.34], desc: '中科院三江源草地生态系统观测研究站，海拔约3900m' },
-            // { name: '杂多县阿多乡',        pos: [95.20, 32.91], desc: '高寒草甸，存在中度至重度退化' },
-            { name: '曲麻莱县曲麻河乡',    pos: [94.99, 34.82], desc: '高寒草原，中度退化区盖度约45%' },
-            // { name: '称多县珍秦乡',        pos: [97.30, 33.41], desc: '玉树高寒草原生态观测实验站，海拔约4270m' },
-            // { name: '玉树州清水河镇北3km', pos: [97.16, 33.83], desc: '高寒草甸退化研究样点，海拔约4426m' },
-            // { name: '治多县五道梁地区',    pos: [93.07, 35.22], desc: '高寒草原研究样点，海拔约4626m' },
-            // { name: '河南蒙古族自治县',    pos: [101.60, 34.73], desc: '高寒草甸产草量模型验证样点' }
+			[97.2, 34.4]
+            // [97.2, 34.4], [97.8, 34.8], [98.2, 34.2], [96.9, 34.1], [97.5, 33.8]
         ];
-
-        // 3. 批量添加脉冲标记（offset 与 30px 点位对齐）
-        points.forEach(item => {
-            const marker = new AMap.Marker({
-                position: item.pos,
-                content: '<div class="red-pulse"></div>',
-                offset: new AMap.Pixel(-15, -15),  // 30px 的一半，让圆心对准坐标
-                map: map
-            });
-
-            // 点击弹出自定义信息窗
-            marker.on('click', () => {
-                const html = `
-                    <div class="degrade-card">
-                        <div class="title">⚠ ${item.name}</div>
-                        <div class="coord">${item.pos[1].toFixed(2)}°N, ${item.pos[0].toFixed(2)}°E</div>
-                        <div class="desc">${item.desc}</div>
-                    </div>`;
-                new AMap.InfoWindow({
-                    content: html,
-                    offset: new AMap.Pixel(0, -18),
-                    isCustom: false
-                }).open(map, item.pos);
-            });
+        points.forEach(pos => {
+            new AMap.Marker({
+                position: pos,
+                content: '<div><div class="red-pulse"></div></div>',
+                offset: new AMap.Pixel(-6, -6)
+            }).setMap(map);
         });
 
-        // 4. 视野自适应：把所有退化点框进视图
-        // map.setFitView(null, false, [80, 80, 80, 80]); // 若想自动缩放可启用
-        // ↑ 因为右侧还有面板悬浮，这里手动固定缩放中心更稳
-        map.setZoomAndCenter(7, [97.5, 34.0]);
-
-        // 5. ECharts 指标图表
+        // 3. ECharts 指标图表
         const waterChart = echarts.init(document.getElementById('water-chart'));
         waterChart.setOption({
             grid: { left: 0, right: 0, top: 10, bottom: 0 },
@@ -268,9 +220,6 @@
         setInterval(() => {
             document.getElementById('clock').textContent = new Date().toLocaleString();
         }, 1000);
-
-        // 窗口缩放时重绘 ECharts
-        window.addEventListener('resize', () => waterChart.resize());
     </script>
 </body>
 </html>
