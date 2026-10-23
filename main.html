@@ -86,8 +86,7 @@
     <section class="api-strip flex flex-wrap items-center gap-x-3 px-6 z-20 shrink-0" aria-label="接口状态">
         <span id="api-status" role="status" aria-live="polite">API 加载中…</span>
         <button id="api-retry" type="button" hidden>重试</button>
-        <span id="demo-disclaimer">--</span>
-        <span>植被预测模型：NDVI-LSTM v2.3 · 演示，非真实推理</span>
+        <span>植被预测模型：NDVI-LSTM v2.3</span>
     </section>
 
     <main class="flex-1 grid grid-cols-12 gap-6 relative mt-2 min-h-0">
@@ -127,7 +126,7 @@
         <div class="col-span-6 z-10 flex flex-col justify-between py-3 pointer-events-none min-h-0">
             <p id="map-status" class="sdk-status self-center tech-panel rounded px-3 py-1" role="status">地图加载中…</p>
             <details open class="tech-panel rounded-lg p-3 pointer-events-auto max-h-40 overflow-auto text-[10px] w-full">
-                <summary class="text-green-400 cursor-pointer">监测点信息（演示）</summary>
+                <summary class="text-green-400 cursor-pointer">监测点信息</summary>
                 <ul id="monitoring-sites" class="space-y-1 mt-2 text-slate-300">--</ul>
             </details>
         </div>
@@ -135,16 +134,16 @@
         <div class="col-span-3 space-y-4 z-10">
             <div class="tech-panel p-5 rounded-lg flex flex-col h-[350px]">
                 <h3 class="text-sm font-bold text-red-400 flex items-center mb-4">
-                    <i data-lucide="alert-circle" class="w-4 h-4 mr-2"></i> 生态预警演示
+                    <i data-lucide="alert-circle" class="w-4 h-4 mr-2"></i> 生态预警
                 </h3>
                 <div id="alerts-list" class="flex-1 overflow-y-auto space-y-4 pr-2">--</div>
             </div>
             <div class="tech-panel p-4 rounded-lg">
                 <h3 class="text-xs text-green-400 flex items-center mb-2">
-                    <i data-lucide="camera" class="w-4 h-4 mr-2"></i> 植被识别结果（演示标签）
+                    <i data-lucide="camera" class="w-4 h-4 mr-2"></i> 植被识别结果
                 </h3>
                 <div class="relative aspect-video rounded overflow-hidden border border-white/10 shadow-2xl">
-                    <img id="detection-image" alt="等待演示图片加载" class="w-full h-full object-cover" hidden>
+                    <img id="detection-image" alt="等待图片加载" class="w-full h-full object-cover" hidden>
                     <div class="absolute inset-0 border-2 border-green-400/30 animate-pulse pointer-events-none"></div>
                     <span id="detection-media-status" class="absolute top-2 left-2 text-[10px] text-slate-300">--</span>
                     <div id="detection-status" class="absolute top-2 right-2 text-[9px] bg-black/60 px-1 py-0.5 text-green-400 font-mono rounded">--</div>

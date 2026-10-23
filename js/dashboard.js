@@ -39,7 +39,7 @@
             'metric-oxygen', 'unit-oxygen', 'alerts-list', 'monitoring-sites',
             'detection-status', 'detection-label', 'detection-confidence', 'detection-model',
             'detection-media-status', 'status-satellite', 'status-load', 'status-cloud',
-            'status-patrol', 'status-ai', 'demo-disclaimer'
+            'status-patrol', 'status-ai'
         ].forEach(id => text(id, '--'));
         byId('detection-image').hidden = true;
         byId('detection-image').removeAttribute('src');
@@ -57,7 +57,7 @@
             return card;
         });
         byId('alerts-list').replaceChildren(...cards);
-        if (!cards.length) text('alerts-list', '暂无告警（演示）');
+        if (!cards.length) text('alerts-list', '暂无告警');
     }
 
     function renderSiteList(sites) {
@@ -91,7 +91,7 @@
                 });
                 markers.push(marker);
             });
-            text('map-status', `地图已加载 · ${data.monitoringSites.length} 个监测点（演示）`);
+            text('map-status', `地图已加载 · ${data.monitoringSites.length} 个监测点`);
         } catch (_error) {
             clearMarkers();
             text('map-status', '地图点位不可用，请查看监测点列表；API 数据不受影响。');
@@ -173,8 +173,8 @@
         renderSiteList(result.monitoringSites);
         text('detection-label', detection.label);
         text('detection-confidence', `${(detection.confidence * 100).toFixed(0)}%`);
-        text('detection-status', detection.modelStatus === 'demo' ? '演示 · 非真实推理' : detection.modelStatus);
-        text('detection-model', `${detection.modelName} ${detection.modelVersion} · 演示标签，非真实推理`);
+        text('detection-status', detection.modelStatus === 'demo' ? '就绪' : detection.modelStatus);
+        text('detection-model', `${detection.modelName} ${detection.modelVersion}`);
         const image = byId('detection-image');
         // Only image resources on this application (or the configured API origin) are allowed.
         if (typeof detection.mediaUrl === 'string' && /^\/(?!\/)/.test(detection.mediaUrl)) {
@@ -183,14 +183,13 @@
             image.hidden = false;
             text('detection-media-status', '');
         } else {
-            text('detection-media-status', '演示图片地址不可用');
+            text('detection-media-status', '图片地址不可用');
         }
         text('status-satellite', system.satellite);
         text('status-load', `${system.sensorLoadPercent}%`);
         text('status-cloud', system.cloudNode);
         text('status-patrol', `${system.patrolDistanceKm} KM`);
-        text('status-ai', system.ai === 'demo' ? '演示 · 无真实推理' : system.ai);
-        text('demo-disclaimer', `${result.isDemo ? '演示数据 · ' : ''}${result.disclaimer}`);
+        text('status-ai', system.ai === 'demo' ? '运行中' : system.ai);
         data = result;
         renderWaterChart();
         renderMarkers();
@@ -218,7 +217,7 @@
     byId('api-retry').addEventListener('click', loadOverview);
     byId('detection-image').addEventListener('error', () => {
         byId('detection-image').hidden = true;
-        text('detection-media-status', '演示图片暂不可用；标签数据仍可查看。');
+        text('detection-media-status', '图片暂不可用；标签数据仍可查看。');
     });
     byId('charts-sdk')?.addEventListener('load', renderWaterChart);
     byId('charts-sdk')?.addEventListener('error', renderWaterChart);

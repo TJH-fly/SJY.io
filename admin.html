@@ -106,8 +106,7 @@
     <section class="api-strip flex flex-wrap items-center gap-x-3 px-6 z-20 shrink-0" aria-label="接口状态">
         <span id="api-status" role="status" aria-live="polite">后台数据加载中…</span>
         <button id="api-retry" type="button" hidden>重试</button>
-        <span id="demo-disclaimer">--</span>
-        <span>管理后台版本：<span id="admin-version">--</span> · 在线演示系统，需登录后操作</span>
+        <span>管理后台版本：<span id="admin-version">--</span> · 需登录后操作</span>
     </section>
 
     <main class="mt-4 px-2 grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -115,7 +114,7 @@
             <article class="tech-panel rounded-xl p-4">
                 <p class="text-xs muted">管理模块</p>
                 <p class="text-3xl font-bold value-mono text-green-300 mt-2" id="metric-modules">--</p>
-                <p class="text-[10px] muted mt-1">当前已注册的演示模块</p>
+                <p class="text-[10px] muted mt-1">当前已注册的模块</p>
             </article>
             <article class="tech-panel rounded-xl p-4">
                 <p class="text-xs muted">监测点</p>
@@ -123,7 +122,7 @@
                 <p class="text-[10px] muted mt-1">SQLite 实时点位数量</p>
             </article>
             <article class="tech-panel rounded-xl p-4">
-                <p class="text-xs muted">演示预警</p>
+                <p class="text-xs muted">预警记录</p>
                 <p class="text-3xl font-bold value-mono text-orange-300 mt-2" id="metric-alerts">--</p>
                 <p class="text-[10px] muted mt-1">SQLite 实时预警数量</p>
             </article>
@@ -175,8 +174,7 @@
                 <h2 class="text-base font-bold text-green-300 flex items-center gap-2" id="notice-heading">
                     <i data-lucide="info" class="w-4 h-4"></i>管理说明
                 </h2>
-                <p id="admin-disclaimer" class="text-[11px] muted mt-3 leading-relaxed">--</p>
-                <p class="text-[11px] text-orange-300/80 mt-2 leading-relaxed">本后台为生态监测演示：账号、监测点、预警与审计日志保存在服务器 SQLite，重启后保留。查看者只读，编辑者维护业务数据，管理员可管理账号并查看审计日志。其他分析与模型数据仍为演示值，不代表真实推理；请使用强密码，避免上传敏感图片。</p>
+                <p class="text-[11px] text-orange-300/80 mt-2 leading-relaxed">账号、监测点、预警与审计日志保存在服务器 SQLite，重启后保留。查看者只读，编辑者维护业务数据，管理员可管理账号并查看审计日志。请使用强密码，避免上传敏感图片。</p>
             </section>
         </aside>
 
@@ -224,7 +222,7 @@
 
         <section class="col-span-12 tech-panel rounded-xl p-5" aria-labelledby="alerts-heading">
             <h2 class="text-base font-bold text-green-300" id="alerts-heading">预警管理</h2>
-            <p class="text-[11px] muted mt-1">维护演示预警等级、标题、时间与地点。删除为软删除，可在显示已删除后恢复。</p>
+            <p class="text-[11px] muted mt-1">维护预警等级、标题、时间与地点。删除为软删除，可在显示已删除后恢复。</p>
             <div class="mt-3 flex items-center justify-between gap-3 flex-wrap">
                 <label id="alerts-deleted-control" class="text-[11px] muted flex items-center gap-2">
                     <input id="alerts-include-deleted" type="checkbox"> 显示已删除记录（可恢复）
@@ -272,11 +270,11 @@
             <h2 class="text-base font-bold text-green-300 flex items-center gap-2" id="image-heading">
                 <i data-lucide="image" class="w-4 h-4"></i>识别图片
             </h2>
-            <p class="text-[11px] muted mt-1">概览页“植被识别结果”使用的演示图片，支持 JPEG / PNG / WebP，最大 2 MiB。</p>
+            <p class="text-[11px] muted mt-1">概览页“植被识别结果”使用的图片，支持 JPEG / PNG / WebP，最大 2 MiB。</p>
             <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-                <img id="image-preview" src="./img/植物1.jpg" alt="植被识别演示图片预览">
+                <img id="image-preview" src="./img/植物1.jpg" alt="植被识别图片预览">
                 <div id="image-write-controls">
-                    <p class="text-xs muted">当前来源：<span id="image-source">默认演示图片</span></p>
+                    <p class="text-xs muted">当前来源：<span id="image-source">默认图片</span></p>
                     <form id="image-form" class="management-form" style="grid-template-columns: minmax(0, 1fr);">
                         <div class="field">
                             <label for="image-file">上传新图片（≤2 MiB）</label>
@@ -374,6 +372,6 @@
         </section>
     </main>
 
-    <footer class="text-center text-[10px] muted py-4 mt-2">© 2026 三江源生态预警数字孪生平台 · 演示系统</footer>
+    <footer class="text-center text-[10px] muted py-4 mt-2">© 2026 三江源生态预警数字孪生平台</footer>
 </body>
 </html>

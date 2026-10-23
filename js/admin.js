@@ -10,8 +10,7 @@
     const PLACEHOLDERS = [
         'metric-modules', 'metric-sites', 'metric-alerts', 'metric-write',
         'count-modules', 'count-sites', 'count-alerts', 'count-vegetation', 'count-grades',
-        'data-mode', 'write-enabled', 'admin-updated', 'admin-version-detail', 'admin-version',
-        'admin-disclaimer', 'demo-disclaimer'
+        'data-mode', 'write-enabled', 'admin-updated', 'admin-version-detail', 'admin-version'
     ];
     const STORE = { site: [], alert: [], user: [] };
     const EDITING = { site: null, alert: null, user: null };
@@ -377,11 +376,9 @@
         text('admin-version', String(overview.version || '--'));
         text('admin-version-detail', String(overview.version || '--'));
         text('admin-updated', String(overview.updatedAt || '--'));
-        text('admin-disclaimer', String(overview.disclaimer || '--'));
-        text('demo-disclaimer', String(overview.disclaimer || '--'));
         if (overview.detectionImageUrl && node('image-preview')) {
             node('image-preview').src = window.DemoAPI.assetUrl(overview.detectionImageUrl);
-            text('image-source', String(overview.detectionImageUrl).startsWith('/uploads/') ? `上传图片：${overview.detectionImageUrl}` : '默认演示图片');
+            text('image-source', String(overview.detectionImageUrl).startsWith('/uploads/') ? `上传图片：${overview.detectionImageUrl}` : '默认图片');
         }
         const modules = node('admin-modules');
         const body = node('admin-table-body');
@@ -573,8 +570,8 @@
         try {
             await window.DemoAPI.request('DELETE', `${API}/detection-image`);
             if (node('image-preview')) node('image-preview').src = window.DemoAPI.assetUrl('/img/植物1.jpg');
-            text('image-source', '默认演示图片');
-            operation('image', 'success', '已恢复默认演示图片。');
+            text('image-source', '默认图片');
+            operation('image', 'success', '已恢复默认图片。');
         } catch (error) {
             operation('image', 'error', `恢复失败：${error?.message || '无法连接服务，请检查网络。'}`);
         } finally {

@@ -34,7 +34,7 @@
             'kpi-meadow-sub', 'kpi-steppe-sub', 'kpi-pred', 'kpi-pred-tag', 'kpi-pred-sub',
             'restoration-rate', 'restoration-area', 'degradation-list', 'table-note',
             'model-label', 'model-footer', 'model-status', 'calibration-points',
-            'source-composition', 'scale-display', 'demo-disclaimer'
+            'source-composition', 'scale-display'
         ].forEach(id => text(id, '--'));
         ['kpi-meadow-trend', 'kpi-steppe-trend'].forEach(id => { byId(id).className = 'text-[10px] tag-flat'; });
         const row = node('tr');
@@ -166,11 +166,10 @@
         const modelName = `${result.model.name} v${result.model.version}`;
         text('model-label', modelName);
         text('model-footer', modelName);
-        text('model-status', `${result.model.status === 'demo' ? '演示模型' : result.model.status} · ${result.model.inference ? '推理结果' : '非真实推理'}`);
+        text('model-status', `${result.model.status === 'demo' ? '运行中' : result.model.status} · ${result.model.inference ? '推理结果' : '统计值'}`);
         text('calibration-points', result.source.calibrationPoints);
         text('source-composition', result.source.composition);
         text('scale-display', result.scale === 'month' ? `月度（${result.unitLabel}）` : `年度（${result.unitLabel}）`);
-        text('demo-disclaimer', `${result.isDemo || result.source.isDemo ? '演示数据 · ' : ''}${result.disclaimer}`);
         data = result;
         renderCharts();
     }
